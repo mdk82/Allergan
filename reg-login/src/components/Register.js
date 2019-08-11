@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 import qs from 'qs';
 
-class Register extends React.Component {
+class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,6 +21,7 @@ class Register extends React.Component {
     this.setState({
       [event.target.name]: event.target.value,
       validatationError: false,
+      errorMessage: '',
     });
   };
 
@@ -51,11 +52,9 @@ class Register extends React.Component {
         body: JSON.stringify(data),
       })
         .then(result => {
-          console.log(result);
-          return result.text();
+          result.text();
         })
         .then(response => {
-          console.log(response);
           if (response.status !== 200) {
             this.setState({ errorMessage: response });
           }
@@ -63,7 +62,6 @@ class Register extends React.Component {
         .catch(err => {
           if (err) {
             this.setState({ errorMessage: true });
-            console.log(err);
           }
         });
     } else {

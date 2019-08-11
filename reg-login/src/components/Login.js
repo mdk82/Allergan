@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-class Login extends React.Component {
+class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: '',
       password: '',
       isLoggedIn: false,
-      errorMessage: '',
+      responseMessage: '',
       validatationError: false,
     };
   }
@@ -16,6 +16,7 @@ class Login extends React.Component {
     this.setState({
       [event.target.name]: event.target.value,
       validatationError: false,
+      responseMessage: '',
     });
   };
 
@@ -27,14 +28,16 @@ class Login extends React.Component {
         `https://iywc8fxtz0.execute-api.us-east-1.amazonaws.com/dev/user/${username}/${password}`
       )
         .then(result => {
-          console.log(result);
+          console.log(result.body);
+          if (result.status === 200) {
+            this.setState({ isLoggedIn: true });
+            return;
+          }
           return result.text();
         })
         .then(response => {
           console.log(response);
-          if (response.status !== 200) {
-            this.setState({ errorMessage: response });
-          }
+          this.setState({ responseMessage: response });
         });
     } else {
       this.setState({ validatationError: true });
@@ -47,7 +50,13 @@ class Login extends React.Component {
   }
 
   render() {
-    const { username, password, errorMessage, validatationError } = this.state;
+    const {
+      username,
+      password,
+      isLoggedIn,
+      responseMessage,
+      validatationError,
+    } = this.state;
     return (
       <div>
         <div className="ui padded grid container segment">
@@ -85,8 +94,13 @@ class Login extends React.Component {
           )}
         </div>
         <div>
-          {errorMessage && (
-            <div className="ui warning message">{errorMessage}</div>
+          {responseMessage && (
+            <div className="ui warning message">{responseMessage}</div>
+          )}
+        </div>
+        <div>
+          {isLoggedIn && (
+            <div className="ui warning message">Successfully Logged In</div>
           )}
         </div>
       </div>
