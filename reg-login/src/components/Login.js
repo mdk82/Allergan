@@ -28,7 +28,6 @@ class Login extends Component {
         `https://iywc8fxtz0.execute-api.us-east-1.amazonaws.com/dev/user/${username}/${password}`
       )
         .then(result => {
-          console.log(result.body);
           if (result.status === 200) {
             this.setState({ isLoggedIn: true });
             return;
@@ -36,7 +35,6 @@ class Login extends Component {
           return result.text();
         })
         .then(response => {
-          console.log(response);
           this.setState({ responseMessage: response });
         });
     } else {

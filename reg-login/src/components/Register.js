@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import qs from 'qs';
 
 class Register extends Component {
   constructor(props) {
@@ -53,7 +51,6 @@ class Register extends Component {
         body: JSON.stringify(data),
       })
         .then(result => {
-          console.log(result);
           if (result.status === 200) {
             this.setState({ isRegistered: true });
             return;
@@ -61,7 +58,6 @@ class Register extends Component {
           return result.text();
         })
         .then(response => {
-          console.log(response);
           this.setState({ responseMessage: response });
         });
     } else {
