@@ -12,7 +12,8 @@ class Register extends Component {
       mobilePhone: '',
       username: '',
       password: '',
-      errorMessage: '',
+      isRegistered: false,
+      responseMessage: '',
       validatationError: false,
     };
   }
@@ -21,7 +22,7 @@ class Register extends Component {
     this.setState({
       [event.target.name]: event.target.value,
       validatationError: false,
-      errorMessage: '',
+      responseMessage: '',
     });
   };
 
@@ -52,17 +53,16 @@ class Register extends Component {
         body: JSON.stringify(data),
       })
         .then(result => {
-          result.text();
+          console.log(result);
+          if (result.status === 200) {
+            this.setState({ isRegistered: true });
+            return;
+          }
+          return result.text();
         })
         .then(response => {
-          if (response.status !== 200) {
-            this.setState({ errorMessage: response });
-          }
-        })
-        .catch(err => {
-          if (err) {
-            this.setState({ errorMessage: true });
-          }
+          console.log(response);
+          this.setState({ responseMessage: response });
         });
     } else {
       this.setState({ validatationError: true });
@@ -96,7 +96,8 @@ class Register extends Component {
       mobilePhone,
       password,
       username,
-      errorMessage,
+      isRegistered,
+      responseMessage,
       validatationError,
     } = this.state;
     return (
@@ -182,8 +183,13 @@ class Register extends Component {
           )}
         </div>
         <div>
-          {errorMessage && (
-            <div className="ui warning message">{errorMessage}</div>
+          {responseMessage && (
+            <div className="ui warning message">{responseMessage}</div>
+          )}
+        </div>
+        <div>
+          {isRegistered && (
+            <div className="ui warning message">Successfully Registered</div>
           )}
         </div>
       </div>
